@@ -1,0 +1,26 @@
+main {
+  width: 100vw;
+  height: calc(100vh - var(--header-size));
+  overflow-y: none;
+  padding: 0 20px 5px;
+}
+
+main:has(~ footer) {
+  height: calc(100vh - (var(--header-size) + var(--footer-size)));
+}
+
+footer {
+  padding: 0px 20px;
+  height: var(--footer-size);
+}
+
+header {
+  height: var(--header-size);
+}
+
+.cards-container {
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px; /* Adjust gap as needed for spacing between cards */
+}

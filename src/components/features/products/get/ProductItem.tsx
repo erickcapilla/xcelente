@@ -12,7 +12,8 @@ import {
   Link,
 } from "@nextui-org/react";
 import { useUser } from "@src/hooks";
-
+import { Carousel } from "../../ui/carousel";
+import { EmblaOptionsType } from 'embla-carousel'
 
 interface Props {
   product: DocumentData;
@@ -22,11 +23,12 @@ export const ProductItem = ({ product }: Props) => {
   const { handleDeleteProduct } = useContext(ProductsContext);
   const { getCategoryNameById } = useContext(CategoriesContext);
   const { user } = useUser()
+  const OPTIONS: EmblaOptionsType = { loop: true }
 
   return (
-    <Card className="max-w-80 w-full border-t-secondary border-t-5 justify-self-center h-[360px]" shadow="sm" radius="sm">
-          <div className="h-40">
-            <img src={Image} alt="" className="w-full h-full object-cover" />
+    <Card className="max-w-80 w-full border-t-secondary border-t-5 justify-self-center" shadow="sm" radius="sm">
+          <div>
+            <Carousel slides={[Image, Image]} options={OPTIONS} />
           </div>
           <CardHeader className="flex justify-between items-center">
             <strong className="text-primary"> {product.name} </strong>

@@ -1,6 +1,6 @@
 import Image from "@assets/producto.webp";
 import { ButtonUI, Header } from "../components/features/ui";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -11,6 +11,9 @@ import {
 import { useAuth, useCategories, useProducts } from "@src/hooks";
 import { useParams, useNavigate } from "react-router-dom";
 import { PayPalButtons } from "@paypal/react-paypal-js";
+import { Carousel } from "@src/components/features/ui/carousel";
+import { EmblaOptionsType } from 'embla-carousel'
+
 
 export const Product = () => {
   const { getCategoryNameById } = useCategories();
@@ -18,13 +21,17 @@ export const Product = () => {
   const { handleGetProduct, product } = useProducts();
   const { id } = useParams();
   const navigate = useNavigate();
+  const [price, setPrice] = useState(product.price)
+  const OPTIONS: EmblaOptionsType = { loop: true }
+  
 
   const onCreateOrder = (data, actions) => {
+    console.log(price, data)
     return actions.order.create({
       purchase_units: [
         {
           amount: {
-            value: "10",
+            value: price,
           },
         },
       ],
@@ -48,19 +55,20 @@ export const Product = () => {
 
   useEffect(() => {
     handleGetProduct(id || "");
-  }, [handleGetProduct, id]);
+    setPrice(product.price)
+  }, [handleGetProduct, id, product]);
 
   return (
     <>
       <Header title={"Comprar producto"} />
       <div className="w-full h-full p-3">
         <Card
-          className="max-w-80 w-full border-t-secondary border-t-5 justify-self-center h-auto mx-auto"
+          className="max-w-80 w-full border-t-secondary border-t-5 h-auto mx-auto"
           shadow="sm"
           radius="sm"
         >
-          <div className="h-40">
-            <img src={Image} alt="" className="w-full h-full object-cover" />
+          <div>
+            <Carousel slides={[Image, Image, Image, Image]} options={OPTIONS} />
           </div>
           <CardHeader className="flex justify-between items-center">
             <strong className="text-primary"> {product.name} </strong>

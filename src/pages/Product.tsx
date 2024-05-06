@@ -74,6 +74,7 @@ export const Product = () => {
   };
 
   const onApproveOrder = (data, actions) => {
+    console.log(data)
     handleSave(id || "")
     return actions.order.capture().then((details) => {
       const name = details.payer.name.given_name;

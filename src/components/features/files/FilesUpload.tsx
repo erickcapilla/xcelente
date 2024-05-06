@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const FilesUpload = (props: Props) => {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState([]);
   const {getRootProps, getInputProps} = useDropzone({
     accept: {
       'image/*': [],

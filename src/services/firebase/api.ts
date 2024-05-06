@@ -14,6 +14,7 @@ import { db } from './config'
 const collectionProducts = 'products';
 const collectionCategories = 'categories';
 const collectionUsers = 'users';
+const collectionShoppings = 'shoppings';
 
 /* PRODUCTS */
 
@@ -56,3 +57,17 @@ export const getUsers = () => getDocs(collection(db, collectionUsers));
 export const deleteUser= (email: string) => deleteDoc(doc(db, collectionUsers, email));
 
 export const getUser = (email: string) => getDoc(doc(db, collectionUsers, email));
+
+/* SHOPPINGS */
+
+export const saveShopping = (email: string, shopping: DocumentData) => 
+  setDoc(doc(db, collectionShoppings, email), shopping);
+
+export const updateShopping = (email: string, shopping: DocumentData) => 
+  updateDoc(doc(db, collectionShoppings, email), shopping);
+
+export const getShoppings = () => getDocs(collection(db, collectionShoppings));
+
+export const deleteShopping= (email: string) => deleteDoc(doc(db, collectionShoppings, email));
+
+export const getShopping = (email: string) => getDoc(doc(db, collectionShoppings, email));

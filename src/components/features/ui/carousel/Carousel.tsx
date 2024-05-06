@@ -1,32 +1,37 @@
-import React from 'react'
-import { EmblaOptionsType } from 'embla-carousel'
+import React from "react";
+import { EmblaOptionsType } from "embla-carousel";
 import {
   PrevButton,
   NextButton,
   usePrevNextButtons,
-  DotButton, useDotButton
-} from '../buttonui'
-import useEmblaCarousel from 'embla-carousel-react'
-import '@css/embla.css'
-
-type PropType = {
-  slides: string[]
-  options?: EmblaOptionsType
+  DotButton,
+  useDotButton,
+} from "../buttonui";
+import useEmblaCarousel from "embla-carousel-react";
+import "@css/embla.css";
+type Multi = {
+  url: string;
+  type: string;
 }
 
+type PropType = {
+  slides: Multi[];
+  options?: EmblaOptionsType;
+};
+
 export const Carousel: React.FC<PropType> = (props) => {
-  const { slides, options } = props
-  const [emblaRef, emblaApi] = useEmblaCarousel(options)
+  const { slides, options } = props;
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi)
+    useDotButton(emblaApi);
 
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
-    onNextButtonClick
-  } = usePrevNextButtons(emblaApi)
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
 
   return (
     <section className="embla">
@@ -34,7 +39,11 @@ export const Carousel: React.FC<PropType> = (props) => {
         <div className="embla__container">
           {slides.map((image, index) => (
             <div className="embla__slide" key={index}>
-                <img src={image} className="embla__slide__number w-full h-full object-cover" />
+              {image.type === 'image' ? (
+                <img src={image.url} className="embla__slide__number w-full h-full object-cover" />
+              ) : (
+                <video controls src={image.url} className="embla__slide__number w-full h-full object-cover" />
+              )}
             </div>
           ))}
         </div>
@@ -51,13 +60,13 @@ export const Carousel: React.FC<PropType> = (props) => {
             <DotButton
               key={index}
               onClick={() => onDotButtonClick(index)}
-              className={'embla__dot'.concat(
-                index === selectedIndex ? ' embla__dot--selected' : ''
+              className={"embla__dot".concat(
+                index === selectedIndex ? " embla__dot--selected" : ""
               )}
             />
           ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};

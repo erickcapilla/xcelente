@@ -59,7 +59,7 @@ export const ProductsProvider = ({ children }: Props) => {
   const [products, setProducts] = useState<DocumentData[]>([]);
   const [product, setProduct] = useState<DocumentData>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const storage = getStorage();
 
   const handleGetProducts = useCallback(async () => {
@@ -84,7 +84,7 @@ export const ProductsProvider = ({ children }: Props) => {
     try {
       const res = await saveProduct(product);
       const images = [""];
-      files.map((file) => {
+      files.map((file, index) => {
         const storageRef = ref(storage, `${res.id}/${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -94,7 +94,11 @@ export const ProductsProvider = ({ children }: Props) => {
             const progress =
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log("Upload is " + progress + "% done");
-            if(progress === 100) {navigate('/products')}
+            if (index == files.length - 1) {
+              if (progress === 100) {
+                navigate("/products");
+              }
+            }
             switch (snapshot.state) {
               case "paused":
                 console.log("Upload is paused");
@@ -179,9 +183,10 @@ export const ProductsProvider = ({ children }: Props) => {
           const desertRef = ref(storage, `${itemRef.fullPath}/`);
           await deleteObject(desertRef);
         });
-        
+
         const images = [""];
-        files.map((file) => {
+        files.map((file, index) => {
+          console.log(index);
           const storageRef = ref(storage, `${id}/${file.name}`);
           const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -191,7 +196,11 @@ export const ProductsProvider = ({ children }: Props) => {
               const progress =
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
               console.log("Upload is " + progress + "% done");
-              if(progress === 100) {navigate('/products')}
+              if (index == files.length - 1) {
+                if (progress === 100) {
+                  navigate("/products");
+                }
+              }
 
               switch (snapshot.state) {
                 case "paused":

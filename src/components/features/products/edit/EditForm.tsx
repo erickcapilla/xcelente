@@ -23,7 +23,6 @@ export const EditForm = ({ id }: Props) => {
     setProduct(
       products.find((product: DocumentData) => product.id === id) || {}
     );
-    console.log(product);
     setProductValue(product);
   }, [id, products, product]);
 

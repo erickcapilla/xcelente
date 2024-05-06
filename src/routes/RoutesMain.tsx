@@ -11,10 +11,10 @@ import {
   RecoverP1,
   RecoverP2,
   AddAdmin,
-  EditProfile
+  EditProfile,
 } from "../pages";
 import { useAuth } from "@src/hooks";
-import { useUser } from "@src/hooks"
+import { useUser } from "@src/hooks";
 
 export const RoutesMain = () => {
   const { isAuth } = useAuth();
@@ -39,10 +39,10 @@ export const RoutesMain = () => {
 
       <Route element={<ProtectedRoute isAllowed={isAuth} />}>
         <Route path="/profile" element={<EditProfile />} />
-        <Route path="/shopping" element={<Shopping />} />
         <Route path="/new-password" element={<RecoverP2 />} />
       </Route>
 
+      <Route path="/shopping" element={<Shopping />} />
       <Route path="/recover-password-send-mail" element={<RecoverP1 />} />
     </Routes>
   );

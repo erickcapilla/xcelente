@@ -1,6 +1,5 @@
-import Image from "@assets/producto.webp";
 import { ButtonUI, Header } from "../components/features/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Card,
   CardBody,
@@ -12,21 +11,57 @@ import { useAuth, useCategories, useProducts } from "@src/hooks";
 import { useParams, useNavigate } from "react-router-dom";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { Carousel } from "@src/components/features/ui/carousel";
-import { EmblaOptionsType } from 'embla-carousel'
+import { EmblaOptionsType } from "embla-carousel";
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import { saveShopping } from "@src/services/firebase/api";
 
+type Multi = {
+  url: string;
+  type: string;
+};
 
 export const Product = () => {
+  const [images, setImages] = useState<Multi[]>([]);
   const { getCategoryNameById } = useCategories();
-  const { isAuth } = useAuth();
+  const { isAuth, userAuthed } = useAuth();
   const { handleGetProduct, product } = useProducts();
   const { id } = useParams();
   const navigate = useNavigate();
-  const [price, setPrice] = useState(product.price)
-  const OPTIONS: EmblaOptionsType = { loop: true }
+  const OPTIONS: EmblaOptionsType = { loop: true };
+  const urlParams = new URLSearchParams(window.location.search);
+  const price = urlParams.get('price');
+
+  const handleSave = async (id: string) => {
+    try {
+      await saveShopping(userAuthed.email || '', {
+        id,
+        progress: 0,
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
   
+  const getImages = useCallback(async (id: string) => {
+    const storage = getStorage();
+    const extVideo = ["mp4", "mov", "avi", "wmv", "flv"];
+    const urlsImg: Multi[] = [];
+    const listRef = ref(storage, `${id}`);
+    const res = await listAll(listRef);
+    res.items.forEach(async (itemRef) => {
+      const url = await getDownloadURL(ref(storage, itemRef.fullPath));
+      urlsImg.push({
+        url,
+        type: extVideo.includes(itemRef.name.split(".").pop() || ".png")
+          ? "video"
+          : "image",
+      });
+      setImages([...urlsImg]);
+    });
+  }, []);
 
   const onCreateOrder = (data, actions) => {
-    console.log(price, data)
+    console.log(price, data);
     return actions.order.create({
       purchase_units: [
         {
@@ -39,6 +74,7 @@ export const Product = () => {
   };
 
   const onApproveOrder = (data, actions) => {
+    handleSave(id || "")
     return actions.order.capture().then((details) => {
       const name = details.payer.name.given_name;
       alert(`Transaction completed by ${name}`);
@@ -54,9 +90,9 @@ export const Product = () => {
   };
 
   useEffect(() => {
+    if(!(images.length > 0)) getImages(id || '');
     handleGetProduct(id || "");
-    setPrice(product.price)
-  }, [handleGetProduct, id, product]);
+  }, [handleGetProduct, id, getImages]);
 
   return (
     <>
@@ -67,10 +103,12 @@ export const Product = () => {
           shadow="sm"
           radius="sm"
         >
-          <div>
-            <Carousel slides={[Image, Image, Image, Image]} options={OPTIONS} />
+          <div className="h-40">
+            {images.length > 0 && (
+              <Carousel slides={images} options={OPTIONS} />
+            )}
           </div>
-          <CardHeader className="flex justify-between items-center">
+          <CardHeader className="flex justify-between items-center mt-5">
             <strong className="text-primary"> {product.name} </strong>
             <strong className="text-gray-500 text-xs">${product.price}</strong>
           </CardHeader>

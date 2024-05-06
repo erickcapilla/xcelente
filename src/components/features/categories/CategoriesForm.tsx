@@ -71,7 +71,6 @@ export const CategoriesForm = () => {
 
     if (!user.isAdmin) {
       filterProducts("price", price);
-      console.log("Hola")
     }
   };
 

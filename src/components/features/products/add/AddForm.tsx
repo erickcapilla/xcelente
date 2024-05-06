@@ -1,18 +1,14 @@
-import {
-  Select,
-  SelectItem,
-  Textarea
-} from "@nextui-org/react";
+import { Select, SelectItem, Textarea } from "@nextui-org/react";
 import { ButtonUI, TextField } from "../../ui";
 import { useState } from "react";
 import { DocumentData } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
 import { useCategories, useProducts } from "@src/hooks";
+import { FilesUpload } from '../../files'
 
 export const AddForm = () => {
-  const navigate = useNavigate()
   const { categories } = useCategories();
   const { handleAddProduct } = useProducts();
+  const [files, setFiles] = useState<File[]>([]);
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -20,9 +16,17 @@ export const AddForm = () => {
     category: "",
     availability: "",
   });
- 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
+  };
+
+  const handleChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files
+    const selectedFilesArray = Array.from(selectedFiles || [])
+    setFiles(selectedFilesArray);
   }
 
   const handleSubmit = async (
@@ -30,8 +34,8 @@ export const AddForm = () => {
   ): Promise<void> => {
     e.preventDefault();
     try {
-      await handleAddProduct(product);
-      navigate("/")
+      await handleAddProduct(product, files);
+      console.log(files)
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -101,7 +105,13 @@ export const AddForm = () => {
           </SelectItem>
         )}
       </Select>
-      <ButtonUI color="primary" variant="solid" type="submit" className="mt-2 h-10">
+      <FilesUpload onChange={(e) => handleChangeFiles(e)} />
+      <ButtonUI
+        color="primary"
+        variant="solid"
+        type="submit"
+        className="mt-2 h-10"
+      >
         Guardar
       </ButtonUI>
     </form>

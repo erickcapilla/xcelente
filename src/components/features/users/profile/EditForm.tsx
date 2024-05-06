@@ -1,11 +1,11 @@
 import { ButtonUI, TextField } from "../../ui";
 import { Textarea, Link } from "@nextui-org/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth, useUser } from "@src/hooks";
 import { useNavigate } from "react-router-dom";
 
 export const EditForm = () => {
-  const { isAuth, userAuthed } = useAuth();
+  const { userAuthed } = useAuth();
   const { user, handleUpdateUser } = useUser();
   const navigate = useNavigate();
   const [userValues, setUserValues] = useState({
@@ -31,12 +31,6 @@ export const EditForm = () => {
     }
     console.log("Submit");
   };
-
-  useEffect(() => {
-    if (!isAuth) {
-      navigate("/");
-    }
-  }, [isAuth, navigate]);
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-y-2 text-black">

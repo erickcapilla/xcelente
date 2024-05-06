@@ -1,12 +1,12 @@
 import { ButtonUI, TextField } from "../../ui";
 import { Card, CardBody, CardHeader } from "@nextui-org/react";
 import Logo from "@icons/logo.svg";
-import { AuthContext } from "@src/context/AuthContext";
-import { useContext, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "@src/hooks";
 
 export const RecoverP1Form = () => {
 	const [email, setEmail] = useState("");
-	const { resetPassword } = useContext(AuthContext);
+	const { resetPassword } = useAuth();
 
 	const handleSubmit = async (e: React.FormEvent<EventTarget>) => {
 		e.preventDefault();

@@ -2,9 +2,10 @@ import { Select, SelectItem, Textarea } from "@nextui-org/react";
 import React, { useState, useEffect } from "react";
 import { DocumentData } from "firebase/firestore";
 import { ButtonUI, TextField } from "../../ui";
-import { useNavigate } from "react-router-dom";
-import { Product } from '@src/types'
+import { Product } from "@src/types";
 import { useCategories, useProducts } from "@src/hooks";
+import { FilesUpload } from '../../files'
+
 
 interface Props {
   id: string;
@@ -13,36 +14,43 @@ interface Props {
 export const EditForm = ({ id }: Props) => {
   const { categories } = useCategories();
   const { hanldeUpdateProduct } = useProducts();
-  const navigate = useNavigate()
-  const { products } = useProducts()
-  const [product, setProduct] = useState<DocumentData>({})
+  const { products } = useProducts();
+  const [product, setProduct] = useState<DocumentData>({});
   const [productValue, setProductValue] = useState<Product>(product);
+  const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
-     setProduct(products.find((product: DocumentData) => product.id === id) || {});
-     console.log(product)
-     setProductValue(product)
+    setProduct(
+      products.find((product: DocumentData) => product.id === id) || {}
+    );
+    console.log(product);
+    setProductValue(product);
   }, [id, products, product]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-    setProductValue({ ...productValue, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => setProductValue({ ...productValue, [e.target.name]: e.target.value });
+
+  const handleChangeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files
+    const selectedFilesArray = Array.from(selectedFiles || [])
+    setFiles(selectedFilesArray);
+  }
 
   const handleSubmit = async (
     e: React.FormEvent<EventTarget>
   ): Promise<void> => {
     e.preventDefault();
-
     const productUpdated = {
       name: productValue?.name,
       description: productValue?.description,
       price: productValue?.price,
       category: productValue?.category,
       availability: productValue?.availability,
-    }
+    };
 
     try {
-      await hanldeUpdateProduct(product.id, productUpdated);
-      navigate("/")
+      await hanldeUpdateProduct(product.id, productUpdated, files);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -117,6 +125,7 @@ export const EditForm = ({ id }: Props) => {
             </SelectItem>
           )}
         </Select>
+        <FilesUpload onChange={(e) => handleChangeFiles(e)} />
         <ButtonUI
           color="primary"
           variant="solid"

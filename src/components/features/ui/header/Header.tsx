@@ -22,12 +22,12 @@ interface Props {
 export const Header = ({ title }: Props) => {
   const { isAuth, logout } = useAuth();
   const { user, setUser } = useUser();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await logout();
-      setUser({})
+      setUser({});
     } catch (error) {
       console.error(error);
     }
@@ -40,10 +40,13 @@ export const Header = ({ title }: Props) => {
         <h2 className="font-bold ml-1 text-xs max-[450px]:hidden">{title}</h2>
       </div>
       <Navbar className="p-0 w-auto">
-        <NavbarContent className="w-auto flex justify-center" justify="end">
-          <NavbarItem>
+        <NavbarContent className="w-auto flex justify-center gap-3" justify="end">
+          <NavbarItem className="flex gap-3">
             <Link href="/" className="font-bold text-xs" underline="always">
               Productos
+            </Link>
+            <Link href="/shopping" className="font-bold text-xs" underline="always">
+              { user.isAdmin ? "Pedidos" : "Mis compras" }
             </Link>
           </NavbarItem>
           <NavbarItem className="w-auto">
@@ -57,7 +60,7 @@ export const Header = ({ title }: Props) => {
                       }}
                       name={user.fullName}
                       avatarProps={{
-                        src: 'https://images.unsplash.com/broken',
+                        src: "https://images.unsplash.com/broken",
                         size: "sm",
                         showFallback: true,
                       }}
@@ -67,12 +70,19 @@ export const Header = ({ title }: Props) => {
                     className="text-black"
                     aria-label="Action event example"
                     onAction={(key) => {
-                      key === "logout" ? handleLogout() : navigate('/profile');
+                      key === "admin" && navigate("/new-admin")
+                      key === "profile" && navigate("/profile")
+                      key === "logout" && handleLogout();
                     }}
                   >
                     <DropdownSection showDivider>
                       <DropdownItem key="profile">Perfil</DropdownItem>
                     </DropdownSection>
+                    {user.isAdmin && (
+                      <DropdownSection showDivider>
+                        <DropdownItem key="admin">Agregar administrador</DropdownItem>
+                      </DropdownSection>
+                    )}
                     <DropdownSection>
                       <DropdownItem key="logout" color="danger">
                         Cerrar sesión

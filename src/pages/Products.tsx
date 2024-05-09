@@ -20,13 +20,13 @@ export const Products = () => {
       <Header title={user.isAdmin ? "Administrar" : "Productos"} />
 
       <main className="flex flex-col gap-y-3">
-        <div className="h-auto w-full flex items-center justify-between">
+        <div className="h-auto w-full flex items-center justify-end">
           {user.isAdmin && (
             <ButtonUI
               as={Link}
               color="primary"
               variant="ghost"
-              size="md"
+              size="sm"
               className="w-auto font-bold"
               href="/add"
             >

@@ -19,7 +19,6 @@ export const ShoppingList = () => {
           });
         })
         setShoppings(productsData);
-        console.log(productsData);
     } catch (error) {
       console.error(error);
     }

@@ -22,5 +22,5 @@ header {
   overflow-y: auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 10px; /* Adjust gap as needed for spacing between cards */
+  gap: 10px;
 }

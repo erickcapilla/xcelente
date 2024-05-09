@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { RoutesMain } from "./routes";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
-import "@css/App.css";
+import "./css/App.css";
 import {
   ProductsProvider,
   CategoriesProvider,

@@ -19,8 +19,20 @@ export const Products = () => {
     <>
       <Header title={user.isAdmin ? "Administrar" : "Productos"} />
 
-      <main className="flex flex-col gap-y-1">
-        <div className="h-auto w-full grid justify-end">
+      <main className="flex flex-col gap-y-3">
+        <div className="h-auto w-full flex items-center justify-between">
+          {user.isAdmin && (
+            <ButtonUI
+              as={Link}
+              color="primary"
+              variant="ghost"
+              size="md"
+              className="w-auto font-bold"
+              href="/add"
+            >
+              Agregar
+            </ButtonUI>
+          )}
           <Popover placement="bottom" showArrow className="max-w-96">
             <PopoverTrigger>
               <Link
@@ -39,27 +51,10 @@ export const Products = () => {
             </PopoverContent>
           </Popover>
         </div>
-        <ScrollShadow
-          className="cards-container pb-1"
-          size={5}
-          hideScrollBar
-        >
+        <ScrollShadow className="cards-container pb-1" size={5} hideScrollBar>
           <ProductList />
         </ScrollShadow>
       </main>
-      {user.isAdmin && (
-        <footer className="flex items-center shrink-1 max-w-5xl m-auto">
-          <ButtonUI
-            as={Link}
-            color="secondary"
-            variant="ghost"
-            className="w-full font-bold"
-            href="/add"
-          >
-            Agregar
-          </ButtonUI>
-        </footer>
-      )}
     </>
   );
 };

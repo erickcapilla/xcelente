@@ -24,24 +24,25 @@ export const Product = () => {
   const [images, setImages] = useState<Multi[]>([]);
   const { getCategoryNameById } = useCategories();
   const { isAuth, userAuthed } = useAuth();
-  const { handleGetProduct, product } = useProducts();
   const { id } = useParams();
+  const { handleGetProduct, products } = useProducts();
+  const product = products.filter((product) => product.id === id);
   const navigate = useNavigate();
   const OPTIONS: EmblaOptionsType = { loop: true };
-  const urlParams = new URLSearchParams(window.location.search);
-  const price = urlParams.get('price');
+  const [price, setPrice] = useState(product[0].price);
 
-  const handleSave = async (id: string) => {
+  const handleSave = async () => {
     try {
-      await saveShopping(userAuthed.email || '', {
-        id,
-        progress: 0,
-      })
+      await saveShopping(userAuthed.email || "", {
+        name: product[0].name,
+        status: "one",
+        price: price,
+      });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
-  
+  };
+
   const getImages = useCallback(async (id: string) => {
     const storage = getStorage();
     const extVideo = ["mp4", "mov", "avi", "wmv", "flv"];
@@ -61,7 +62,8 @@ export const Product = () => {
   }, []);
 
   const onCreateOrder = (data, actions) => {
-    console.log(price, data);
+    setPrice(product[0].price);
+    console.log(data);
     return actions.order.create({
       purchase_units: [
         {
@@ -74,15 +76,15 @@ export const Product = () => {
   };
 
   const onApproveOrder = (data, actions) => {
-    console.log(data)
-    handleSave(id || "")
+    console.log(data);
+    handleSave();
     return actions.order.capture().then((details) => {
       const name = details.payer.name.given_name;
       alert(`Transaction completed by ${name}`);
     });
   };
 
-  const handleBuy = () => {
+  const handleBuy = async () => {
     if (!isAuth) {
       navigate("/login");
       return;
@@ -91,9 +93,8 @@ export const Product = () => {
   };
 
   useEffect(() => {
-    if(!(images.length > 0)) getImages(id || '');
-    handleGetProduct(id || "");
-  }, [handleGetProduct, id, getImages]);
+    if (!(images.length > 0)) getImages(id || "");
+  }, [handleGetProduct, id, getImages, images]);
 
   return (
     <>
@@ -110,16 +111,18 @@ export const Product = () => {
             )}
           </div>
           <CardHeader className="flex justify-between items-center mt-5">
-            <strong className="text-primary"> {product.name} </strong>
-            <strong className="text-gray-500 text-xs">${product.price}</strong>
+            <strong className="text-primary"> {product[0].name} </strong>
+            <strong className="text-gray-500 text-xs">
+              ${product[0].price}
+            </strong>
           </CardHeader>
           <CardBody className="text-black h-[60px] text-sm">
-            <p> {product.description} </p>
+            <p> {product[0].description} </p>
           </CardBody>
           <CardFooter className="flex flex-col gap-2 w-full">
             <div className="container flex justify-between items-center text-gray-500 text-xs">
               <div className="container">
-                Disponibilidad: <strong>{product.availability}</strong>
+                Disponibilidad: <strong>{product[0].availability}</strong>
               </div>
               <Chip
                 color="secondary"
@@ -127,7 +130,7 @@ export const Product = () => {
                 size="sm"
                 className="text-black"
               >
-                {getCategoryNameById(product.category)}
+                {getCategoryNameById(product[0].category)}
               </Chip>
             </div>
             {isAuth ? (

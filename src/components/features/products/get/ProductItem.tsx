@@ -49,7 +49,7 @@ export const ProductItem = ({ product }: Props) => {
 
   return (
     <Card
-      className="max-w-80 w-full border-t-secondary border-t-5 justify-self-center h-[380px]"
+      className="max-w-80 w-full border-t-secondary border-t-5 justify-self-center h-[380px] "
       shadow="sm"
       radius="sm"
     >
@@ -57,7 +57,7 @@ export const ProductItem = ({ product }: Props) => {
         {images.length > 0 && <Carousel slides={images} options={OPTIONS} />}
       </div>
       <CardHeader className="flex justify-between items-center mt-5">
-        <strong className="text-primary max-w-[50%]"> {product.name} </strong>
+        <strong className="text-primary max-w-[90%] text-sm"> {product.name} </strong>
         <strong className="text-gray-500 text-xs">${product.price}</strong>
       </CardHeader>
       <CardBody className="text-black h-[60px] text-sm">

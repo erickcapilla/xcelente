@@ -142,7 +142,6 @@ export const ProductsProvider = ({ children }: Props) => {
       const listRef = ref(storage, `${id}`);
       const res = await listAll(listRef);
       res.items.forEach(async (itemRef) => {
-        //const url = await getDownloadURL(ref(storage, itemRef.fullPath));
         const desertRef = ref(storage, `${itemRef.fullPath}/`);
         await deleteObject(desertRef);
       });

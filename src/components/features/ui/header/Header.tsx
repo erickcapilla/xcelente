@@ -40,16 +40,25 @@ export const Header = ({ title }: Props) => {
         <h2 className="font-bold ml-1 text-xs max-[450px]:hidden">{title}</h2>
       </div>
       <Navbar className="p-0 w-auto">
-        <NavbarContent className="w-auto flex justify-center gap-3" justify="end">
+        <NavbarContent
+          className="w-auto flex justify-center gap-3"
+          justify="end"
+        >
           <NavbarItem className="flex gap-3">
             <Link href="/" className="font-bold text-xs" underline="always">
               Productos
             </Link>
-            <Link href="/shopping" className="font-bold text-xs" underline="always">
-              { user.isAdmin ? "Pedidos" : "Mis compras" }
-            </Link>
+            {isAuth && (
+              <Link
+                href="/shopping"
+                className="font-bold text-xs"
+                underline="always"
+              >
+                {user.isAdmin ? "Pedidos" : "Mis compras"}
+              </Link>
+            )}
           </NavbarItem>
-          <NavbarItem className="w-auto">
+          <NavbarItem className="w-auto cursor-pointer">
             <div className="flex justify-end">
               {isAuth ? (
                 <Dropdown radius="sm" showArrow>
@@ -70,8 +79,8 @@ export const Header = ({ title }: Props) => {
                     className="text-black"
                     aria-label="Action event example"
                     onAction={(key) => {
-                      key === "admin" && navigate("/new-admin")
-                      key === "profile" && navigate("/profile")
+                      key === "admin" && navigate("/new-admin");
+                      key === "profile" && navigate("/profile");
                       key === "logout" && handleLogout();
                     }}
                   >
@@ -80,7 +89,9 @@ export const Header = ({ title }: Props) => {
                     </DropdownSection>
                     {user.isAdmin && (
                       <DropdownSection showDivider>
-                        <DropdownItem key="admin">Agregar administrador</DropdownItem>
+                        <DropdownItem key="admin">
+                          Agregar administrador
+                        </DropdownItem>
                       </DropdownSection>
                     )}
                     <DropdownSection>

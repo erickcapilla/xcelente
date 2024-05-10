@@ -81,5 +81,5 @@ export const getShoppings = (email: string) =>
 export const deleteShopping = (email: string, id: string) =>
   deleteDoc(doc(db, `/shoppings/${email}/products/`, id));
 
-export const getShopping = (email: string, id: string) =>
-  getDoc(doc(db, `/shoppings/${email}/products/`, id));
+export const getAllShoppings = () =>
+  getDocs(collection(db, "shoppings"));

@@ -40,9 +40,9 @@ export const RoutesMain = () => {
       <Route element={<ProtectedRoute isAllowed={isAuth} />}>
         <Route path="/profile" element={<EditProfile />} />
         <Route path="/new-password" element={<RecoverP2 />} />
+        <Route path="/shopping" element={<Shopping />} />
       </Route>
 
-      <Route path="/shopping" element={<Shopping />} />
       <Route path="/recover-password-send-mail" element={<RecoverP1 />} />
     </Routes>
   );

@@ -8,8 +8,11 @@ import {
   getDocs,
   DocumentData,
   setDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "./config";
+import { months } from "../../utils/utils";
 
 const collectionProducts = "products";
 const collectionCategories = "categories";
@@ -83,3 +86,14 @@ export const deleteShopping = (email: string, id: string) =>
 
 export const getAllShoppings = () =>
   getDocs(collection(db, "shoppings"));
+
+/* REPORTS */
+const month = months[new Date().getMonth()]
+
+export const getReport = (email: string) =>
+  getDocs(
+    query(
+      collection(db, `/shoppings/${email}/products/`),
+      where("month", "==", month)
+    )
+  );    

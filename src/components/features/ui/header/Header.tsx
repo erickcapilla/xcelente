@@ -37,7 +37,7 @@ export const Header = ({ title }: Props) => {
     <header className="w-screen pl-6 text-primary flex items-center justify-between">
       <div className="flex items-center mt-2">
         <img src={Logo} alt="Logo de xcelente" width={35} />
-        <h2 className="font-bold ml-1 text-xs max-[450px]:hidden">{title}</h2>
+        <h2 className="font-bold ml-1 text-sm max-[450px]:hidden">{title}</h2>
       </div>
       <Navbar className="p-0 w-auto">
         <NavbarContent

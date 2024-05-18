@@ -11,7 +11,7 @@ export const LayoutForm = ({ title, children }: Props) => {
   return (
     <>
       <Header title="XCELENTE" />
-      <main className="flex flex-col justify-center gap-5 w-screen">
+      <main className="flex flex-col pt-3 gap-5 w-screen">
         <Card className="max-w-[400px] w-full mx-auto h-auto shrink-1 text-black">
           <CardHeader>
             <div className="flex gap-3 items-center mx-auto tx-lg">

@@ -8,7 +8,7 @@ export const Login = () => {
   return (
     <>
       <Header title="XCELENTE" />
-      <main className="flex flex-col justify-center gap-5 w-screen">
+      <main className="flex flex-col pt-3 gap-5 w-screen">
         <LoginForm />
         <ButtonUI
           as={Link}

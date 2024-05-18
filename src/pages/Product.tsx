@@ -6,22 +6,24 @@ import {
   CardHeader,
   CardFooter,
   Chip,
+  Link,
 } from "@nextui-org/react";
-import { useAuth, useCategories, useProducts } from "@src/hooks";
+import { useAuth, useCategories, useProducts, useUser } from "@src/hooks";
 import { useParams, useNavigate } from "react-router-dom";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { Carousel } from "@src/components/features/ui/carousel";
 import { EmblaOptionsType } from "embla-carousel";
 import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
 import { saveShopping } from "@src/services/firebase/api";
+import { months } from "@src/utils/utils";
 
-type Multi = {
+type Multimedia = {
   url: string;
   type: string;
 };
 
 export const Product = () => {
-  const [images, setImages] = useState<Multi[]>([]);
+  const [images, setImages] = useState<Multimedia[]>([]);
   const { getCategoryNameById } = useCategories();
   const { isAuth, userAuthed } = useAuth();
   const { id } = useParams();
@@ -30,23 +32,26 @@ export const Product = () => {
   const navigate = useNavigate();
   const OPTIONS: EmblaOptionsType = { loop: true };
   const [price, setPrice] = useState(product[0].price);
+  const { user } = useUser();
 
   const handleSave = async () => {
-    try {
+    try { 
       await saveShopping(userAuthed.email || "", {
         name: product[0].name,
         status: "one",
         price: price,
+        month: months[new Date().getMonth()],
       });
     } catch (error) {
       console.error(error);
     }
   };
 
+
   const getImages = useCallback(async (id: string) => {
     const storage = getStorage();
     const extVideo = ["mp4", "mov", "avi", "wmv", "flv"];
-    const urlsImg: Multi[] = [];
+    const urlsImg: Multimedia[] = [];
     const listRef = ref(storage, `${id}`);
     const res = await listAll(listRef);
     res.items.forEach(async (itemRef) => {
@@ -89,7 +94,6 @@ export const Product = () => {
       navigate("/login");
       return;
     }
-    alert("Compra realizada con éxito");
   };
 
   useEffect(() => {
@@ -99,7 +103,7 @@ export const Product = () => {
   return (
     <>
       <Header title={"Comprar producto"} />
-      <div className="w-full h-full p-3">
+      <main className="w-full h-full p-3">
         <Card
           className="max-w-80 w-full border-t-secondary border-t-5 h-auto mx-auto"
           shadow="sm"
@@ -152,7 +156,19 @@ export const Product = () => {
             )}
           </CardFooter>
         </Card>
-      </div>
+        {(!user.address && isAuth) && (
+          <article className="border-2 border-danger max-w-80 w-full m-auto mt-3 text-danger flex gap-2 text-sm items-center p-2 rounded-md">
+            <p>Ingresa tu dirección en tu información</p>
+            <Link
+              href="/profile"
+              className="text-secondary "
+              underline="always"
+            >
+              Perfil
+            </Link>
+          </article>
+        )}
+      </main>
     </>
   );
 };
